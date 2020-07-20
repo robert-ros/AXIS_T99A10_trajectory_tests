@@ -1,0 +1,27 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "",
+        "limitSymbolsToIncludedHeaders": true
+      },
+      "includePath": [
+        "/home/robert/ws/test/devel/include/**",
+        "/opt/ros/kinetic/include/**",
+        "/home/robert/ws/test/src/rbrobout/eband_local_planner/include/**",
+        "/home/robert/ws/test/src/rbrobout/gazebo_ros_pkgs/gazebo_plugins/include/**",
+        "/home/robert/ws/test/src/rbrobout/gazebo_ros_pkgs/gazebo_ros/include/**",
+        "/home/robert/ws/test/src/rbrobout/gazebo_ros_pkgs/gazebo_ros_control/include/**",
+        "/home/robert/ws/test/src/rbrobout/imu_tools/imu_complementary_filter/include/**",
+        "/home/robert/ws/test/src/rbrobout/imu_tools/imu_filter_madgwick/include/**",
+        "/home/robert/ws/test/src/rbrobout/imu_manager/include/**",
+        "/home/robert/ws/test/src/rbrobout/rcomponent/include/**",
+        "/home/robert/ws/test/src/rbrobout/robotnik_pad/robotnik_pad/include/**",
+        "/home/robert/ws/test/src/rbrobout/robotnik_pad/robotnik_pad_plugins/include/**",
+        "/home/robert/ws/test/src/rbrobout/sick_safetyscanners/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS"
+    }
+  ]
+}

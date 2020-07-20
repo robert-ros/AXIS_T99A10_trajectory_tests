@@ -1,0 +1,20 @@
+<launch>
+
+    <arg name="camera_name" default="axis" />
+    <arg name="use_velocity" default="false" />
+
+    <group ns="$(arg camera_name)">
+
+
+        <!-- My Package launch file -->
+        <node unless="$(arg use_velocity)"  pkg="axis_cam" type="ros_spline.py" name="ros_spline_node"  output="screen" />
+
+        <node if="$(arg use_velocity)"  pkg="axis_cam" type="ros_sine.py" name="ros_sine_node"  output="screen" />
+
+    </group>
+
+    <node name="rqt_gui" pkg="rqt_gui" type="rqt_gui"
+          args =
+          "--perspective-file $(find axis_cam)/rqt/axis_cam_1.perspective"/>/>
+
+</launch>

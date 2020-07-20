@@ -1,0 +1,47 @@
+
+# JointXXXController (input)
+#   - JointPositionController
+#   - JointVelocityController
+#   - JointEffortController
+#   - JointTrajectoryController
+
+# xxx_controllers (output, same used in urdf)
+#   - position_controllers
+#   - velocity_controllers
+#   - effort_controllers
+#
+
+
+# Publish all joint states -----------------------------------
+joint_state_controller:
+  type: joint_state_controller/JointStateController
+  publish_rate: 50  
+
+# Position Controllers ---------------------------------------
+pan_joint_position_controller:
+  type: velocity_controllers/JointPositionController
+  joint: joint_pan
+  pid: {p: 1.0, i: 0.0, d: 0.0}
+
+tilt_joint_position_controller:
+  type: velocity_controllers/JointPositionController
+  joint: joint_tilt
+  pid: {p: 1.0, i: 0.0, d: 0.0}
+
+
+# # For trajectory control ---------------------------------------
+# axis_cam_controller:
+#   type: "position_controllers/JointTrajectoryController"
+#   joints:
+#     - joint_pan
+#     - joint_tilt
+#   gains:  # Required because we're controlling a velocity interface
+#      joint_pan : {p: 1,  d: 0.0, i: 0.0, i_clamp: 1}
+#      joint_tilt: {p: 1,  d: 0.0, i: 0.0, i_clamp: 1}
+
+
+# gazebo_ros_control/pid_gains: 
+#   joint_pan : {p: 1000.0,  d: 0.0, i: 0.0, i_clamp: 1}
+#   joint_tilt: {p: 1000.0,  d: 0.0, i: 0.0, i_clamp: 1}
+
+

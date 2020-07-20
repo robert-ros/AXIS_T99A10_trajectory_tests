@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<launch>
+
+    <arg name="camera_name" default="axis" />
+
+    <group ns="$(arg camera_name)">
+
+        <!-- Load the URDF into the ROS Parameter Server -->
+        <arg name="xacro_robot" default="$(find axis_cam)/urdf/axis_cam.urdf.xacro" />
+        <param name="robot_description" command="$(find xacro)/xacro '$(arg xacro_robot)'  --inorder
+        "/>
+
+        <!-- Robot state publisher -->
+        <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" 
+            respawn="false" output="screen" />
+
+
+
+        <!-- Load hardware interface config-->
+        <rosparam file="$(find mini_atom_hardware_interface)/config/robot_hardware.yaml" command="load"/>
+
+        <!-- Start mini atom hardware interface node-->
+        <node name="mini_atom_hardware_interface" pkg="mini_atom_hardware_interface" type="mini_atom_hardware_interface_node" output="screen"/>
+
+
+        <!-- Load controller -->
+        <rosparam file="$(find axis_cam)/config/axis_cam_control.yaml" command="load"/>
+
+        <!-- Launch controller manager  -->
+        <node name="axis_cam_controller_spawner" pkg="controller_manager" type="spawner" respawn="false" 
+            output="screen" args="
+                            pan_joint_position_controller
+                            tilt_joint_position_controller
+                            joint_state_controller
+                            "/>
+
+
+
+          <!-- Launch real motors device hardware
+        <node name="serial_node" pkg="rosserial_python" type="serial_node.py">
+            <param name="port" value="/dev/ttyACM0"/>
+        </node>
+        -->
+        
+    </group>
+
+
+    <!-- Start RVIZ -->
+    <arg name="rviz_config" default="$(find mini_atom_hardware_interface)/rviz/axis_cam_real.rviz"/> 
+	<node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rviz_config)" required="true"/>
+
+            
+</launch>

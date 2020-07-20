@@ -1,0 +1,5 @@
+hardware_interface:
+    loop_hz: 10 # hz
+    joints:
+      - joint_pan
+      - joint_tilt

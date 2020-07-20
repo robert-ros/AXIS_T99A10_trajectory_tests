@@ -1,0 +1,5 @@
+<launch>
+    <!-- My Package launch file -->
+    <node pkg="axis_cam" type="simple_trajectory" name="simple_trajectory_node"  output="screen">
+    </node>
+</launch>

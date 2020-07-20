@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<launch>
+
+	<!-- - - - - - - - - - - -  GENERAL ARGUMENTS - - - - - - - - - - -->
+
+	<!-- Robot properties -->
+	<arg name="robot_id"		 default="ax" />
+
+	<!-- Robot world -->
+	<arg name="x_spawn_robot"    default="0" />
+	<arg name="y_spawn_robot"    default="0" />
+	<arg name="z_spawn_robot"    default="0" />
+
+
+
+    <!-- Load the URDF into the ROS Parameter Server -->
+    <arg name="xacro_robot" default="$(find axis_cam)/urdf/axis_cam.urdf.xacro" />
+    <param name="robot_description" command="$(find xacro)/xacro '$(arg xacro_robot)'  --inorder
+    "/>
+
+    <!-- Spawner model into gazebo -->
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+        args="-urdf -x $(arg x_spawn_robot) -y $(arg x_spawn_robot) -z $(arg x_spawn_robot)
+            -model $(arg robot_id) -param robot_description"/>
+
+
+    <!-- Robot state publisher -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" 
+        respawn="false" output="screen" />
+
+    <!-- Launch joint state GUI for publish tf
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+        <param name="use_gui" value="true"/>
+    </node>
+    -->
+
+    <!-- Start gazebo -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+		<arg name="debug" 		  value="false" />
+		<arg name="paused" 		  value="false"/>
+		<arg name="use_sim_time"  value="true"/>
+		<arg name="headless" 	  value="false"/> 
+		<arg name="gui" 		  value="true"/>
+	</include>
+
+    <!-- Start RVIZ -->
+    <arg name="rviz_config" default="$(find axis_cam)/rviz/axis_cam_rviz.rviz"/> 
+	<node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rviz_config)" required="true"/>
+
+
+
+    <!-- Load controllers  axis_cam_controller 
+    <rosparam file="$(find axis_cam)/config/axis_cam_control.yaml" command="load"/>
+	<node name="axis_cam_controller_spawner" pkg="controller_manager" type="spawner" respawn="false" 
+		output="screen" args="
+                        axis_cam_controller
+						joint_state_controller
+						"/>
+	-->
+
+
+    <!-- Load controllers  pan_joint_position_controller  tilt_joint_position_controller  -->
+    <rosparam file="$(find axis_cam)/config/axis_cam_control.yaml" command="load"/>
+	<node name="axis_cam_controller_spawner" pkg="controller_manager" type="spawner" respawn="false" 
+		output="screen" args="
+                        pan_joint_position_controller
+                        tilt_joint_position_controller
+						joint_state_controller
+						"/>
+    
+
+
+</launch>

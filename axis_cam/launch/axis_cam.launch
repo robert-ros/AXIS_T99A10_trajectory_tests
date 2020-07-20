@@ -1,0 +1,25 @@
+
+<launch>
+
+
+    <arg name="use_position_teleop" default="true" />
+
+
+    <node pkg="axis_cam" type="cmd_viewer.py" name="cmd_viewer_node"  output="screen"/>
+
+
+    <node pkg="axis_camera" type="teleop.py" name="teleop" if="$(arg use_position_teleop)">
+      <param name="enable_button" value="1" />
+      <param name="scale_pan_deg" value="25" />
+      <param name="scale_tilt_deg" value="25" />
+      <remap from="joy" to="/joy" />
+    </node>
+
+    <node pkg="axis_camera" type="teleop_speed_control.py" name="teleop" unless="$(arg use_position_teleop)">
+      <remap from="joy" to="/joy" />
+    </node>
+
+
+
+
+</launch>

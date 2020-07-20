@@ -1,0 +1,193 @@
+<?xml version="1.0"?>
+
+<robot name="axis_cam" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+
+    <!-- ====================  Base link frame ==================== -->
+
+    <link name="world"/>
+
+    <link name="base_link">
+      <inertial>
+        <mass value="0.001" />
+        <origin xyz="0 0 0" />
+        <inertia ixx="0.0001" ixy="0.0" ixz="0.0"
+          iyy="0.0001" iyz="0.0"
+          izz="0.0001" />
+      </inertial>
+
+      <visual>
+         <origin xyz="0 0 0.05" rpy="0 0 0" />
+         <geometry>
+            <cylinder radius="0.2" length="0.1"/>
+         </geometry>
+      </visual>
+
+    </link>
+
+    <gazebo reference="base_link">
+      <material>Gazebo/Orange</material>
+    </gazebo>
+
+
+    <joint name="world_joint" type="fixed">
+        <parent link="world" />
+        <child link = "base_link" />
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+    </joint>
+
+
+    <!-- ====================  link_1 frame ==================== -->
+
+    <link name="pan_link">
+      <inertial>
+        <mass value="0.001" />
+        <origin xyz="0 0 0" />
+        <inertia ixx="0.0001" ixy="0.0" ixz="0.0"
+          iyy="0.0001" iyz="0.0"
+          izz="0.0001" />
+      </inertial>
+
+      <visual>
+         <origin xyz="0 0 0.2" rpy="0 0 0" />
+         <geometry>
+            <cylinder radius="0.1" length="0.4"/>
+         </geometry>
+      </visual>
+
+    </link>
+
+    <gazebo reference="pan_link">
+      <material>Gazebo/White</material>
+    </gazebo>
+
+
+    <joint name="joint_pan" type="continuous">
+        <parent link="base_link" />
+        <child link = "pan_link" />
+        <origin xyz="0.0 0.0 0.1" rpy="0.0 0.0 0.0" />
+        <axis xyz="0 0 1" />
+    </joint>
+
+
+    <!-- ====================  link_2 frame ==================== -->
+
+
+    <link name="tilt_link">
+      <inertial>
+        <mass value="0.001" />
+        <origin xyz="0 0 0" />
+        <inertia ixx="0.0001" ixy="0.0" ixz="0.0"
+          iyy="0.0001" iyz="0.0"
+          izz="0.0001" />
+      </inertial>
+
+       <visual>
+         <origin xyz="0 0 0.075" rpy="0 0 0" />
+         <geometry>
+            <cylinder radius="0.05" length="0.15"/>
+         </geometry>
+      </visual>
+
+    </link>
+
+    <gazebo reference="tilt_link">
+      <material>Gazebo/Red</material>
+    </gazebo>
+
+
+    <joint name="joint_tilt" type="revolute">
+        <parent link="pan_link" />
+        <child link = "tilt_link" />
+        <origin xyz="0.0 0.0 0.4" rpy="0.0 0.0 0.0" />
+         <limit  effort="1000.0"  lower="1.57" upper="-0.785" velocity="0.5"/>
+        <axis xyz="0 1 0" />
+    </joint>
+
+
+    <!-- ====================  link_end_effector frame ==================== -->
+
+    <link name="camera_link">
+      <inertial>
+        <mass value="0.001" />
+        <origin xyz="0 0 0" />
+        <inertia ixx="0.0001" ixy="0.0" ixz="0.0"
+          iyy="0.0001" iyz="0.0"
+          izz="0.0001" />
+      </inertial>
+
+       <visual>
+         <origin xyz="0.1 0.0 0.006" rpy="0 0 0" />
+         <geometry>
+            <box size="0.4 0.12 0.12" />
+         </geometry>
+      </visual>
+
+    </link>
+
+    <gazebo reference="camera_link">
+      <material>Gazebo/Green</material>
+    </gazebo>
+
+    <joint name="joint_camera" type="fixed">
+        <parent link="tilt_link" />
+        <child link = "camera_link" />
+        <origin xyz="0.0 0.0 0.15" rpy="0.0 0.0 0.0" />
+        <axis xyz="0 1 0" />
+    </joint>
+
+
+   <!-- ====================== Gazebo plugin ======================== -->
+
+    <!-- ros_control plugin -->
+
+    <gazebo>
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+        <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType> 
+        <legacyModeNS>true</legacyModeNS> 
+        </plugin>
+    </gazebo>
+
+   <!-- ====================== Transmissions ======================== -->
+
+    <!--
+        PositionJointInterface
+        VelocityJointInterface
+        EffortJointInterface
+    -->
+
+    <transmission name="trans1">
+
+        <type>transmission_interface/SimpleTransmission</type>
+
+        <joint name="joint_pan">
+            <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+        </joint>
+
+        <actuator name="motor1">
+            <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+
+    </transmission>
+
+
+    <transmission name="trans2">
+
+        <type>transmission_interface/SimpleTransmission</type>
+
+        <joint name="joint_tilt">
+            <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+        </joint>
+
+        <actuator name="motor2">
+            <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+
+        
+
+    </transmission>
+
+
+</robot>
